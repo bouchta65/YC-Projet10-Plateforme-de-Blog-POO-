@@ -1,12 +1,12 @@
 <?php 
+session_start();
 include '../db/config.php'; 
 include '../classes/Member.php';
-
+$user = new User($conn,"","",0,"","","");
 
 if(isset($_POST['loginbutton'])){
   $email = $_POST['emaillogin'];
   $pass = $_POST['passwordlogin'];
-  $user = new User($conn,"","","","","","");
   $user->login($email,$pass);
   }
 
