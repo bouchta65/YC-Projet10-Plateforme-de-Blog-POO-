@@ -1,7 +1,6 @@
 <?php
-include '../db/config.php';
 
-class Article implements InterfaceBlog{
+class Article {
     private int $id_Article;
     private string $titre_Article;
     private string $contenu_Article;
@@ -9,8 +8,8 @@ class Article implements InterfaceBlog{
     private string $date_Partage;
     private bool $article_Confirmer;
     private PDO $conn;
-    private array $likes ; 
-    private array $comments; 
+    private array $likes = []; 
+    private array $comments = []; 
 
     public function __construct(PDO $conn,int $id_Article, string $titre_Article, string $contenu_Article, string $image_Article, string $date_Partage, bool $article_Confirmer) {
         $this->conn = $conn;
@@ -20,8 +19,6 @@ class Article implements InterfaceBlog{
         $this->image_Article = $image_Article;
         $this->date_Partage = $date_Partage;
         $this->article_Confirmer = $article_Confirmer;
-        $this->likes = [];
-        $this->comments = [];
     }
 
     public function getTitreArticle(): string {
@@ -94,13 +91,7 @@ class Article implements InterfaceBlog{
 
     
 
-    public function getAllObjects(): array{
-        $sql = "SELECT * FROM Article a left join Archive r on a.Id_Article = r.Id_Article where a.Id_User='$idUser' and r.Id_Article is null";
-        $stmt = $this->conn->prepar($sql);
-        $stmt->execute();
-        $result = $tstmt->fetch(PDO::FETCH_NUM);
-        return $result;
-    }
+
 
     public function loadObjects(string $tableName, int $id_Article): void
     {
@@ -128,11 +119,27 @@ class Article implements InterfaceBlog{
                 $stmt->bindValue(5, $id_User, PDO::PARAM_INT); 
         
                 $stmt->execute();
-        
                 echo "Article successfully added!";
+
             } catch (PDOException $e) {
                 echo "Error adding article: " . $e->getMessage();
             }
+    }
+    public function getAllObjects(): array{
+        $sql = "SELECT * FROM Article a left join Archive r on a.Id_Article = r.Id_Article where a.Id_User='$idUser' and r.Id_Article is null";
+        $stmt = $this->conn->prepar($sql);
+        $stmt->execute();
+        $result = $tstmt->fetch(PDO::FETCH_NUM);
+        return $result;
+    }
+
+    public function getOneObject(int $id_User): array{
+        $sql = "SELECT * from Article where id_User=?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(1,$this->id_User,PDO::FETCH_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_NUM);
+        return $result;
     }
         
 
