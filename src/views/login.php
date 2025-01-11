@@ -2,7 +2,7 @@
 session_start();
 include '../db/config.php'; 
 include '../classes/Member.php';
-$user = new User($conn,"","",0,"","","");
+$user = new User($conn,0,"","",0,"","","");
 
 if(isset($_POST['loginbutton'])){
   $email = $_POST['emaillogin'];
